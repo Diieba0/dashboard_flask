@@ -48,5 +48,40 @@ def meteo():
     })
 
 
+from functions import extract_keywords
+
+NEWS_API_KEY = "5de7d028984d46de9c6cf7c961b12f7b"  # Remplacez None par votre clé NEWSAPI, par exemple "4116306b167e49x993017f089862d4xx"
+
+if NEWS_API_KEY is None:
+    # URL de test :
+    NEWS_API_URL = "https://s3-eu-west-1.amazonaws.com/course.oc-static.com/courses/4525361/top-headlines.json"  # exemple de JSON
+else:
+    # URL avec clé :
+    NEWS_API_URL = "https://newsapi.org/v2/top-headlines?sortBy=publishedAt&pageSize=100&language=fr&apiKey=" + NEWS_API_KEY
+
+
+@app.route('/api/news/')
+def get_news():
+    response = requests.get(NEWS_API_URL)
+
+    content = json.loads(response.content.decode('utf-8'))
+
+    if response.status_code != 200:
+        return jsonify({
+            'status': 'error',
+            'message': 'La requête à l\'API des articles d\'actualité n\'a pas fonctionné. Voici le message renvoyé par l\'API : {}'.format(
+                content['message'])
+        }), 500
+
+    keywords, articles = extract_keywords(content["articles"])
+
+    return jsonify({
+        'status': 'ok',
+        'data': {
+            'keywords': keywords[:100],  # On retourne uniquement les 100 premiers mots
+            'articles': articles
+        }
+    })
+
 if __name__ == "__main__":
     app.run(debug=True)
