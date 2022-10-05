@@ -3,19 +3,16 @@
 var news_data;
 
 // Palette de couleurs utilisée par tous les graphiques
-var colors = ["#1D507A", "#2F6999", "#66A0D1", "#8FC0E9", "#4682B4"];
+var colors = ["#c503fa", "#d259f5", "#e09ef3", "#f1d4fa", "#838080FF"];
 
 // Chargement des articles de presse
 $.ajax({
-          url: "/api/news",
-          success: display_news
+    url: "/api/news",
+    success: display_news
 });
 
-// Chargement des données météo
-d3.json('/api/meteo', display_nvd3_graph);
-
 function display_news(result) {
-	news_data = result["data"];
+    news_data = result["data"];
     display_wordcloud(news_data);
     display_all_articles();
 }
@@ -31,7 +28,7 @@ function display_wordcloud(news_data) {
             name: keywords[i]["word"],
             weight: keywords[i]['cnt'],
             events: {
-                click: function(event) {
+                click: function (event) {
                     var keyword = event.point.name;
                     display_articles_from_word(keyword);
                 }
@@ -46,7 +43,7 @@ function display_wordcloud(news_data) {
             data: data,
             name: 'Occurrences',
             colors:
-                colors,
+            colors,
             rotation: {
                 from: -60,
                 to: 60,
@@ -72,7 +69,7 @@ function display_all_articles() {
 function display_articles_from_word(word) {
     var articles;
     for (i in news_data['keywords']) {
-        if (news_data['keywords'][i]['word'] == word) {
+        if (news_data['keywords'][i]['word'] === word) {
             articles = news_data['keywords'][i]['articles'];
             break;
         }
@@ -94,9 +91,13 @@ function display_articles(articles) {
     }
 }
 
+
+// Chargement des données météo
+d3.json('/api/meteo', display_nvd3_graph);
+
 function display_nvd3_graph(data) {
 
-    if (data["status"] == "ok") {
+    if (data["status"] === "ok") {
         var temperature_data = [{
             key: 'Température',
             values: data["data"]
@@ -104,30 +105,30 @@ function display_nvd3_graph(data) {
 
         var first_date = temperature_data[0]['values'][0][0];
 
-        nv.addGraph(function() {
+        nv.addGraph(function () {
 
             var chart = nv.models.lineWithFocusChart()
-                .x(function(d) {
+                .x(function (d) {
                     return d[0]
                 })
-                .y(function(d) {
+                .y(function (d) {
                     return d[1]
                 })
                 .yDomain([-5, 35])
                 .height(270)
                 .color(colors);
 
-            chart.brushExtent([new Date(first_date), new Date(first_date + 24*3600*1000)]); // 24*3600*1000ms = 1jour
+            chart.brushExtent([new Date(first_date), new Date(first_date + 24 * 3600 * 1000)]); // 24*3600*1000ms = 1jour
 
             chart.xAxis
                 .showMaxMin(false)
-                .tickFormat(function(d) {
+                .tickFormat(function (d) {
                     return d3.time.format('%H:00 (%a)')(new Date(d))
                 });
 
             chart.x2Axis
                 .showMaxMin(false)
-                .tickFormat(function(d) {
+                .tickFormat(function (d) {
                     return d3.time.format('%a %-d/%-m')(new Date(d))
                 });
 
@@ -153,10 +154,80 @@ function display_nvd3_graph(data) {
 }
 
 
-// Chargement des données du debat
-d3.json('/api/debat', display_graph_debat);
+// Chargement des reponses du debat
+$.ajax({
+    url: "/api/debat/",
+    success: display_debat()
+});
 
-function display_graph_debat(data) {
+function display_debat(result) {
+    debat_data = result["data"];
+    display_bargraph(debat_data)
+}
 
+function display_bargraph(debat_data) {
+    if (debat_data["status"] === "ok") {
+        var data = [{
+            anonymes: debat_data["oui"],
+            identifies: debat_data["non"],
+        }]
+    }
 
+    Highcharts.chart("debat", {
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: 'Participants Anonymes'
+        },
+
+        series: [{
+            name: 'Anonymes',
+            data: data["anonymes"]
+        }, {
+            name: 'Identifies',
+            data: data["identifies"]
+        }],
+
+        xAxis: {
+            categories: ['', '',],
+            title: {
+                text: null
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: null,
+            },
+            labels: {
+                overflow: 'justify'
+            }
+        },
+        tooltip: {
+            valueSuffix: ' participants'
+        },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: -40,
+            y: 80,
+            floating: true,
+            borderWidth: 1,
+            backgroundColor:
+                Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+            shadow: true
+        },
+        credits: {
+            enabled: false
+        },
+    });
 }

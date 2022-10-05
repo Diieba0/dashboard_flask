@@ -74,7 +74,7 @@ def extract_answers(texts):
     oui = []
     non = []
 
-    for text in enumerate(texts):
+    for i,text in enumerate(texts):
         # Extraction des éléments selon la structure JSON renvoyée par l'API NEWSAPI.ORG
         reponse = text["Anonyme"]
 
