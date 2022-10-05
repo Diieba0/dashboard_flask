@@ -67,3 +67,23 @@ def normalise_and_get_words(text):
     words = [w for w in words if len(w) > 2] # suppression des mots de moins de 2 caractères
     words = [w for w in words if w not in stop_words] # suppression des stopwords
     return words
+
+
+def extract_answers(texts):
+
+    oui = []
+    non = []
+
+    for text in enumerate(texts):
+        # Extraction des éléments selon la structure JSON renvoyée par l'API NEWSAPI.ORG
+        reponse = text["Anonyme"]
+
+        # Stockage des articles dans la variable articles
+        if reponse == "Oui":
+            oui.append(reponse)
+        elif reponse == "Non":
+            non.append(reponse)
+        else:
+            break
+
+    return oui, non

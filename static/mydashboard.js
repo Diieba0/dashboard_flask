@@ -151,3 +151,12 @@ function display_nvd3_graph(data) {
         });
     }
 }
+
+
+// Chargement des données du debat
+d3.json('/api/debat', display_graph_debat);
+
+function display_graph_debat(data) {
+
+
+}
