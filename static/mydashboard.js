@@ -1,6 +1,8 @@
 // contient les articles de presse, qui doivent être
 // gardés en mémoire même après affichage du graphique
 var news_data;
+var debat_data;
+
 
 // Palette de couleurs utilisée par tous les graphiques
 var colors = ["#c503fa", "#d259f5", "#e09ef3", "#f1d4fa", "#838080FF"];
@@ -75,7 +77,7 @@ function display_articles_from_word(word) {
         }
     }
     display_articles(articles);
-};
+}
 
 function display_articles(articles) {
     var div = $("#tableauArticles").html("");
@@ -86,7 +88,7 @@ function display_articles(articles) {
         var title = article["title"];
         var source = article["source"];
         var url = article["url"];
-        var newLine = "<tr><td class='newspaper'>" + source + "</td><td><a target='_blank'href='" + url + "'>" + title + "</a></td></tr>"
+        var newLine = "<tr><td class='newspaper'>" + source + "</td><td><a target='_blank' href='" + url + "'>" + title + "</a></td></tr>"
         tab.append(newLine);
     }
 }
@@ -157,19 +159,20 @@ function display_nvd3_graph(data) {
 // Chargement des reponses du debat
 $.ajax({
     url: "/api/debat/",
-    success: display_debat()
+    success: display_debat
 });
 
-function display_debat(result) {
-    debat_data = result["data"];
+function display_debat(result1) {
+    console.log(result1);
+    debat_data = result1["data"];
     display_bargraph(debat_data)
 }
 
-function display_bargraph(debat_data) {
-    if (debat_data["status"] === "ok") {
+function display_bargraph(participants) {
+    if (participants["status"] === "ok") {
         var data = [{
-            anonymes: debat_data["oui"],
-            identifies: debat_data["non"],
+            anonymes: participants["oui"],
+            identifies: participants["non"],
         }]
     }
 
