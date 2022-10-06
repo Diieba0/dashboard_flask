@@ -146,7 +146,7 @@ h1 {
     }
 }
 
-#nuage, #listeArticles {
+#nuage, #themes {
     width: 550px;
     height: 310px;
     display: inline-block;
@@ -154,7 +154,7 @@ h1 {
     overflow: scroll;
 }
 
-#tableauArticles table {
+#themes table {
     margin-top: 7px;
     margin-left: 5px;
     border-collapse: collapse;
@@ -167,15 +167,15 @@ h1 {
     padding: 5px;
 }
 
-#tableauArticles tr:nth-child(odd) {
+#themes tr:nth-child(odd) {
     background-color: #EEE;
 }
 
-#tableauArticles tr {
+#themes tr {
     border: solid 1px #DDD;
 }
 
-#tableauArticles .newspaper {
+#themes .newspaper {
     width: 130px;
 }
 
