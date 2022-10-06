@@ -1,8 +1,5 @@
 // contient les articles de presse, qui doivent être
 // gardés en mémoire même après affichage du graphique
-var news_data;
-var debat_data;
-
 
 // Palette de couleurs utilisée par tous les graphiques
 var colors = ["#c503fa", "#d259f5", "#e09ef3", "#f1d4fa", "#838080FF"];
@@ -13,6 +10,8 @@ $.ajax({
     success: display_news
 });
 
+var news_data;
+
 function display_news(result) {
     news_data = result["data"];
     display_wordcloud(news_data);
@@ -20,9 +19,7 @@ function display_news(result) {
 }
 
 function display_wordcloud(news_data) {
-
     var data = [];
-
     var keywords = news_data["keywords"];
 
     for (i in keywords) {
@@ -155,28 +152,28 @@ function display_nvd3_graph(data) {
     }
 }
 
+var debat_data;
 
 // Chargement des reponses du debat
 $.ajax({
-    url: "/api/debat/",
+    url: "/api/debat",
     success: display_debat
 });
 
 function display_debat(result1) {
-    console.log(result1);
     debat_data = result1["data"];
     display_bargraph(debat_data)
 }
 
-function display_bargraph(participants) {
-    if (participants["status"] === "ok") {
-        var data = [{
-            anonymes: participants["oui"],
-            identifies: participants["non"],
-        }]
-    }
+function display_bargraph(debat_data) {
 
-    Highcharts.chart("debat", {
+    var identifies;
+    identifies = debat_data['non'];
+
+    var anonymes;
+    anonymes = debat_data['oui'];
+
+    Highcharts.chart('bargraph', {
         chart: {
             type: 'bar'
         },
@@ -184,16 +181,8 @@ function display_bargraph(participants) {
             text: 'Participants Anonymes'
         },
 
-        series: [{
-            name: 'Anonymes',
-            data: data["anonymes"]
-        }, {
-            name: 'Identifies',
-            data: data["identifies"]
-        }],
-
         xAxis: {
-            categories: ['', '',],
+            categories: ['Participants'],
             title: {
                 text: null
             }
@@ -201,14 +190,14 @@ function display_bargraph(participants) {
         yAxis: {
             min: 0,
             title: {
-                text: null,
+                text: '',
             },
             labels: {
                 overflow: 'justify'
             }
         },
         tooltip: {
-            valueSuffix: ' participants'
+            valueSuffix: ''
         },
         plotOptions: {
             bar: {
@@ -232,5 +221,26 @@ function display_bargraph(participants) {
         credits: {
             enabled: false
         },
+        series: [{
+            name: 'Anonymes',
+            data: [anonymes]
+        }, {
+            name: 'Identifiés',
+            data: [identifies]
+        }]
     });
+}
+
+
+$.ajax({
+    url: "/api/themes/",
+    success: display_themes()
+});
+
+var themes_data;
+
+function display_all_themes() {
+    var all_themes = []
+    for (i = 0; i < themes_data['articles'].length; i++)
+        all_themes.push(i);
 }
