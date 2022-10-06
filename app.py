@@ -94,15 +94,17 @@ else:
     GRAND_DEBAT_API_URL = "https://www.data.gouv.fr/fr/datasets/donnees-ouvertes-du-grand-debat-national/" + NEWS_API_KEY
 
 
+response = requests.get(GRAND_DEBAT_API_URL)
+
+content = json.loads(response.content.decode('utf-8'))
+
+
 from functions import extract_answers
 
 @app.route('/api/debat/')
 def get_answers():
-    reponse = requests.get(GRAND_DEBAT_API_URL)
 
-    content = json.loads(reponse.content.decode('utf-8'))
-
-    if reponse.status_code != 200:
+    if response.status_code != 200:
         return jsonify({
             'status': 'error',
             'message': 'La requête à l\'API des réunions locales n\'a pas fonctionné. Voici le message renvoyé par l\'API : {}'.format(
@@ -116,6 +118,29 @@ def get_answers():
         'data': {
             'oui': len(oui) + 100,
             'non': len(non)
+        }
+    })
+
+
+
+from functions import extract_themes
+
+@app.route('/api/themes/')
+def get_themes():
+
+    if response.status_code != 200:
+        return jsonify({
+            'status': 'error',
+            'message': 'La requête à l\'API des réunions locales n\'a pas fonctionné. Voici le message renvoyé par l\'API : {}'.format(
+                content['message'])
+        }), 500
+
+    themes = extract_themes(content)
+
+    return jsonify({
+        'status': 'ok',
+        'data': {
+            'themes': themes,
         }
     })
 

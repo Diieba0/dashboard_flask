@@ -75,7 +75,7 @@ def extract_answers(texts):
     non = []
 
     for i,text in enumerate(texts):
-        # Extraction des éléments selon la structure JSON renvoyée par l'API NEWSAPI.ORG
+        # Extraction des éléments selon la structure JSON renvoyée par l'API grand debat
         reponse = text["Anonyme"]
 
         # Stockage des articles dans la variable articles
@@ -87,3 +87,16 @@ def extract_answers(texts):
             break
 
     return oui, non
+
+
+def extract_themes(texts):
+    themes = []
+
+    for i,text in enumerate(texts):
+        # Extraction des éléments selon la structure JSON renvoyée par l'API grand debat
+        theme = text["Sur quel s theme s votre reunion a t elle porte"]
+
+        # Stockage des articles dans la variable articles
+        themes.append(theme)
+
+    return themes

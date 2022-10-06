@@ -92,7 +92,7 @@ h1 {
     height: 625px;
 }
 
-.highcharts-figure,
+/*.highcharts-figure,
 .highcharts-data-table table {
     min-width: 310px;
     max-width: 800px;
@@ -137,7 +137,7 @@ h1 {
 
 .highcharts-data-table tr:hover {
     background: #f1f7ff;
-}
+}*/
 
 @media (min-width: 1200px) {
     #actu {
@@ -146,7 +146,7 @@ h1 {
     }
 }
 
-#nuage, #listeArticles {
+#bargraph, #nuage, #listeArticles {
     width: 550px;
     height: 310px;
     display: inline-block;
