@@ -87,7 +87,7 @@ h1 {
     vertical-align: top;
 }
 
-#actu {
+#themes {
     width: 550px;
     height: 625px;
 }
@@ -140,15 +140,13 @@ h1 {
 }
 
 @media (min-width: 1200px) {
-    #actu {
+    #themes {
         width: 1115px;
-        height: inherit;
+        height: 430px;
     }
 }
 
-#nuage, #themes {
-    width: 550px;
-    height: 310px;
+#themes {
     display: inline-block;
     vertical-align: top;
     overflow: scroll;
@@ -163,7 +161,7 @@ h1 {
     color: #333;
 }
 
-#tableauArticles td {
+#themes td {
     padding: 5px;
 }
 
