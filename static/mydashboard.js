@@ -1,6 +1,3 @@
-// contient les articles de presse, qui doivent être
-// gardés en mémoire même après affichage du graphique
-
 // Chargement des reponses du debat
 $.ajax({
     url: "/api/debat",
@@ -81,8 +78,8 @@ function display_bargraph(debat_data) {
 }
 
 
-// chargement des différents themes abordés lors des autres réunions
 
+// chargement des différents themes abordés lors des autres réunions
 $.ajax({
     url: "/api/themes/",
     success: display_themes
@@ -99,7 +96,7 @@ function display_all_themes(themes_data) {
     var div = $("#themes").html("");
     div.append("<table></table");
     var tab = $("#themes table");
-    var en_tete = "<thead><tr><th class='newspaper'>" + "les differents thèmes abordés" + "</th></tr></thead>"
+    var en_tete = "<thead><tr><th class='newspaper'>" + "Les differents thèmes abordés" + "</th></tr></thead>"
     tab.append(en_tete)
     for (var i in themes_data['themes']) {
         var theme = themes_data["themes"][i];
@@ -107,6 +104,7 @@ function display_all_themes(themes_data) {
         tab.append(newLine);
     }
 }
+
 
 
 // chargement nrb participants en fonction de la ville
@@ -119,18 +117,21 @@ var participation_data;
 
 function display_participation(result3) {
     participation_data = result3["data"];
+    // console.log(participation_data);
     display_participants(participation_data);
 }
 
 function display_participants(participation_data) {
 
-    var participation = participation_data["participation"];
-    var affichage = []
+    var affichage = [];
+    var villes = Object.keys(participation_data);
+    // console.log(villes);
 
-    for (var i = 0; i <= 99; i++) {
-        affichage.push(participation[i])
+    for (var i = 0; i < 19; i++) {
+        var participants = participation_data[villes[i]];
+        affichage.push([villes[i], participants]);
     }
-    console.log(affichage)
+    //console.log(affichage);
 
     Highcharts.chart('participation', {
         chart: {

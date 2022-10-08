@@ -28,9 +28,9 @@ response = requests.get(GRAND_DEBAT_API_URL)
 
 content = json.loads(response.content.decode('utf-8'))
 
-
-
 from functions import extract_answers
+
+
 @app.route('/api/debat/')
 def get_answers():
     if response.status_code != 200:
@@ -52,6 +52,8 @@ def get_answers():
 
 
 from functions import extract_themes
+
+
 @app.route('/api/themes/')
 def get_themes():
     if response.status_code != 200:
@@ -71,7 +73,9 @@ def get_themes():
     })
 
 
-from functions import extract_participation
+from functions import extract_participants_total
+
+
 @app.route('/api/participation/')
 def get_participation():
     if response.status_code != 200:
@@ -81,13 +85,11 @@ def get_participation():
                 content['message'])
         }), 500
 
-    participation = extract_participation(content)
+    participation_totale_par_ville = extract_participants_total(content)
 
     return jsonify({
         'status': 'ok',
-        'data': {
-            'participation': participation,
-        }
+        'data': participation_totale_par_ville
     })
 
 

@@ -33,9 +33,10 @@ def extract_themes(texts):
     return themes
 
 
-def extract_participation(texts):
-    participation = []
+def extract_participants_total(texts):
     villes = []
+    participants = []
+    participation_totale_par_ville = {}
 
     for i, text in enumerate(texts):
         # Extraction des éléments selon la structure JSON renvoyée par l'API NEWSAPI.ORG
@@ -44,22 +45,34 @@ def extract_participation(texts):
 
         # stockage des données
         if type(participants_ville) == int:
-            if ville not in villes:
-                villes.append(ville)
-                participation.append([ville, participants_ville])
+            villes.append(ville)
+            participants.append(participants_ville)
+        else:
+            continue
+
+        for index in range(len(villes)):
+            ville = villes[index]
+            participants_exact = participants[index]
+
+            if ville not in participation_totale_par_ville.keys():
+                participation_totale_par_ville[ville] = participants_exact
 
             else:
-                participants_total = tri_villes_participantes(participation, ville) + participants_ville
-                participation.append([ville, participants_total])
+                participation_totale_par_ville[ville] += participants_exact
 
-    return participation
+    return participation_totale_par_ville
+
+# def extract_participants_par_ville(villes, participants):
+#         else:
+#             ville = villes[i]
+#             participation_totale[ville] += participants_exact
 
 
-def tri_villes_participantes(participation, ville):
-    participants_de_plus = 0
-    for i in participation:
-        if i[0] == ville:
-            participants_de_plus += i[1]
-            #participation.pop(i)
-
-    return participants_de_plus
+# def tri_villes_participantes(participation, ville):
+#     participants_de_plus = 0
+#     for i in participation:
+#         if i[0] == ville:
+#             participants_de_plus += i[1]
+#             #participation.pop(i)
+#
+#     return participants_de_plus
